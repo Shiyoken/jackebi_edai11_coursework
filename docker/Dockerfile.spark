@@ -1,0 +1,22 @@
+FROM apache/spark:3.5.1
+
+USER root
+
+ARG DELTA_VERSION=3.2.0
+ARG HADOOP_AWS_VERSION=3.3.4
+ARG AWS_SDK_VERSION=1.12.262
+ARG POSTGRES_VERSION=42.6.0
+ARG MAVEN=https://repo1.maven.org/maven2
+
+RUN curl -fSL --retry 3 -o /opt/spark/jars/delta-spark_2.12-${DELTA_VERSION}.jar \
+        ${MAVEN}/io/delta/delta-spark_2.12/${DELTA_VERSION}/delta-spark_2.12-${DELTA_VERSION}.jar && \
+    curl -fSL --retry 3 -o /opt/spark/jars/delta-storage-${DELTA_VERSION}.jar \
+        ${MAVEN}/io/delta/delta-storage/${DELTA_VERSION}/delta-storage-${DELTA_VERSION}.jar && \
+    curl -fSL --retry 3 -o /opt/spark/jars/hadoop-aws-${HADOOP_AWS_VERSION}.jar \
+        ${MAVEN}/org/apache/hadoop/hadoop-aws/${HADOOP_AWS_VERSION}/hadoop-aws-${HADOOP_AWS_VERSION}.jar && \
+    curl -fSL --retry 3 -o /opt/spark/jars/aws-java-sdk-bundle-${AWS_SDK_VERSION}.jar \
+        ${MAVEN}/com/amazonaws/aws-java-sdk-bundle/${AWS_SDK_VERSION}/aws-java-sdk-bundle-${AWS_SDK_VERSION}.jar && \
+    curl -fSL --retry 3 -o /opt/spark/jars/postgresql-${POSTGRES_VERSION}.jar \
+        ${MAVEN}/org/postgresql/postgresql/${POSTGRES_VERSION}/postgresql-${POSTGRES_VERSION}.jar
+
+USER spark

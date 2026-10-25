@@ -1,0 +1,20 @@
+# For comparison with multi-stage Dockerfile build
+FROM python:3.10
+LABEL version="without multi stage"
+WORKDIR /app 
+
+# Copy all code files before installing dependencies
+COPY . /app 
+
+# Install all necessary compilers 
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libpq-dev \
+    curl 
+# Download all necessary dependencies
+# RUN pip install -r docker/requirements.txt # This one takes too long to download, 20 minutes+
+RUN pip install --no-cache-dir --prefer-binary -r docker/requirements.txt
+
+# Run as root user
+CMD ["python", "--version"]
